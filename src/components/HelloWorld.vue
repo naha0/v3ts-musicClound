@@ -6,8 +6,21 @@ interface Tree{
   checked:boolean,
   children?:Tree[]
 }
-defineProps<{ msg?: string, data?:Tree[] }>();
-
+// defineProps<{ msg?: string, data?:Tree[] }>();
+const data = reactive([
+  {
+    checked:false,
+    name:'1',
+    children:[
+      {
+        checked:true,
+        name:'1-1-1',
+        children:[]
+      }
+    ]
+  }
+])
+const msg = ref('HelloWorld')
 const dom = ref<HTMLDivElement>();
 const getValue = () => {
   console.log(dom.value?.innerText);
@@ -79,15 +92,15 @@ const getCheckBox = (item:Tree,e:Event) => {
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
+  <h1 class="ml-10">{{ msg }}</h1>
   <!-- <div ref="dom" @click="getValue">我是vue3</div> -->
   <!-- <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>
   </div> -->
-  <div v-for="(item,index) in data" :key="index" class="ml-10" @click="getCheckBox(item,$event)">
+  <!-- <div v-for="(item,index) in data" :key="index"  @click="getCheckBox(item,$event)">
     <input v-model="item.checked" type="checkbox" /><span>{{item.name}}</span>
     <HelloWorld v-if="item?.children?.length" :data="item?.children"></HelloWorld>
-  </div>
+  </div> -->
   <!-- <div>
     <div>账号:
       <input v-model="loginForm.name" />

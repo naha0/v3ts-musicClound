@@ -1,34 +1,42 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { zhCN } from 'naive-ui';
-import { NConfigProvider, GlobalThemeOverrides } from 'naive-ui'
-import { darkTheme } from 'naive-ui'
-import type { GlobalTheme } from 'naive-ui'
-import useMain from '@/store/MainStore';
-  const themeOverrides: GlobalThemeOverrides = {
-    common: {
-      primaryColor: '#FF0000'
-    },
-    Button: {
-      textColor: '#FF0000'
-    }
-  }
-const themeVal = ref<GlobalTheme | null>(null)
-
+import { computed } from "vue";
+import { zhCN } from "naive-ui";
+import { NConfigProvider, GlobalThemeOverrides } from "naive-ui";
+import { darkTheme } from "naive-ui";
+import useMain from "@/store/MainStore";
+import LayOut from "@/view/LayOut.vue";
+const MainStore = useMain();
+const themeOverrides: GlobalThemeOverrides = {
+  common: {
+    primaryColor: MainStore.getTextColor,
+    primaryColorHover:MainStore.getHoverColor
+  },
+  Button: {
+    textColor: MainStore.getTextColor,
+  },
+};
+const themeVal = computed(() =>
+  MainStore.theme == "darkTheme" ? darkTheme : undefined
+);
 </script>
 
 <template>
-  <n-config-provider :locale="zhCN" :theme-overrides="themeOverrides" :theme="themeVal">
+  <n-config-provider
+    :locale="zhCN"
+    :theme-overrides="themeOverrides"
+    :theme="themeVal"
+  >
     <n-loading-bar-provider>
       <div class="w-100vw">
         <n-message-provider>
           <n-dialog-provider>
-            <router-view></router-view>
+            <lay-out></lay-out>
           </n-dialog-provider>
         </n-message-provider>
       </div>
     </n-loading-bar-provider>
   </n-config-provider>
+  <router-view></router-view>
 </template>
 
 <style scoped lang="scss">

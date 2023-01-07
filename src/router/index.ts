@@ -11,6 +11,11 @@ const routes = [
     name: "Home",
     component: () => import("@/view/home/index.vue")
   },
+  {
+    path: "/home1",
+    name: "Home1",
+    component: () => import("@/components/HelloWorld.vue")
+  },
 ];
 
 export default createRouter({

@@ -3,7 +3,7 @@ import { CashOutline as CashIcon } from "@vicons/ionicons5";
 import useMain from "@/store/MainStore";
 import { useMessage, useDialog, NButton, NIcon, NGradientText } from "naive-ui";
 import { onMounted, h, computed } from "vue";
-import NavBar from "@/components/LayOut/NavBar.vue";
+import NavBar from "@/components/LayOut/NavBar/NavBar.vue";
 import MainContent from "@/components/LayOut/MainContent.vue";
 import FooterControl from "@/components/LayOut/FooterControl.vue";
 const dialog = useDialog();

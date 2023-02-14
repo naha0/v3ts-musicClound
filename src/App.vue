@@ -8,12 +8,12 @@ import LayOut from "@/view/LayOut.vue";
 const MainStore = useMain();
 const themeOverrides: GlobalThemeOverrides = {
   common: {
-    primaryColor: MainStore.getTextColor,
-    primaryColorHover:MainStore.getHoverColor
+    baseColor:MainStore.getBaseColor,
+    primaryColor: MainStore.getTextColor
   },
-  Button: {
-    textColor: MainStore.getTextColor,
-  },
+  Button:{
+    textColor:MainStore.getBaseColor
+  }
 };
 const themeVal = computed(() =>
   MainStore.theme == "darkTheme" ? darkTheme : undefined
@@ -40,18 +40,4 @@ const themeVal = computed(() =>
 </template>
 
 <style scoped lang="scss">
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-.text {
-  @apply text-yellow-600 w-screen bg-zinc-900;
-}
 </style>

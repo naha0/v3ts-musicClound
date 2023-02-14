@@ -92,7 +92,7 @@ const getCheckBox = (item:Tree,e:Event) => {
 </script>
 
 <template>
-  <h1 class="ml-10">{{ msg }}</h1>
+  <h1 class="ml-10">{{ msg }}22222222</h1>
   <!-- <div ref="dom" @click="getValue">我是vue3</div> -->
   <!-- <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>

@@ -1,4 +1,5 @@
 import type { MessageApiInjection } from 'naive-ui/lib/message/src/MessageProvider';
+import type { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
 /// <reference types="vite/client" />
 // naive-ui组件库全局类型声明 给编辑器提供更好的类型提示
 export * from 'naive-ui/volar';
@@ -16,6 +17,11 @@ declare global {
 declare module 'vue' {
   export interface Window {
     $message: MessageApiInjection;
+  }
+}
+declare module 'axios' {
+  interface AxiosInstance {
+    (config: AxiosRequestConfig): Promise<any>
   }
 }
 // 任意键值对对象类型

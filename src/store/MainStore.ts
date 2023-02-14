@@ -2,17 +2,28 @@ import { defineStore } from "pinia";
 
 const useMain = defineStore('main', {
     state: () => ({
-        theme: ''
+        theme: '',
+        login: {
+            token: '',
+            code: '',
+            profile: {
+                avatarUrl: '',
+                nickname: '',
+                userId: ''
+            }
+        }
     }),
     getters: {
         getTheme(): string {
             return this.theme
         },
         getTextColor(): string {
-            return this.theme == "darkTheme" ? '#5dc3fe' : '#ec4141'
+            return this.theme == "darkTheme" ?  '#ec4141': '#5dc3fe'
+            // return this.theme == "darkTheme" ? 'yellow' : 'blue'
+
         },
-        getHoverColor(): string {
-            return this.theme == "darkTheme" ? '#000' : '#000'
+        getBaseColor(): string {
+            return this.theme == "darkTheme" ? 'ec4141' : '#d5d5d5'
         }
     },
     actions: {

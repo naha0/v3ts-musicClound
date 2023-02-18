@@ -7,20 +7,18 @@ import {
   PersonOutline as PersonIcon,
   WineOutline as WineIcon,
 } from "@vicons/ionicons5";
-import useMain from '@/store/MainStore'
-import {getUserPlaylist} from '@/service/user'
-import { onMounted } from "vue";
-const MainStore = useMain()
 
+import { onMounted } from "vue";
+import { useUser } from '@/hooks/useUserPlaylist'
+const { userPlayList } = useUser()
 defineProps<{
   getInverted: boolean;
 }>();
-
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
-onMounted(async()=>{
-  let res:any = await getUserPlaylist(MainStore.profile.userId)
+onMounted(()=>{
+  userPlayList()
   
 })
 const menuOptions: MenuOption[] = [

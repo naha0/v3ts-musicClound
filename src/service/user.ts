@@ -15,7 +15,7 @@ export function getUserInfo() {
   });
 }
 //获取用户详情
-export function getUserDetail(uid:string) {
+export function getUserDetail(uid:number) {
   return hyRequest.get({
     url:'/user/detail',
     params:{

@@ -1,13 +1,21 @@
+<!--
+ * @Author: naha0 780400335@qq.com
+ * @Date: 2023-01-07 09:32:40
+ * @LastEditors: naha0 780400335@qq.com
+ * @LastEditTime: 2023-02-18 23:17:56
+ * @FilePath: \v3ts1\src\view\LayOut.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <script setup lang="ts">
 import { CashOutline as CashIcon } from "@vicons/ionicons5";
-import useMain from "@/store/MainStore";
+import {useMainStore} from "@/store/MainStore";
 import { useMessage, useDialog, NButton, NIcon, NGradientText } from "naive-ui";
 import { onMounted, h, computed } from "vue";
 import NavBar from "@/components/LayOut/NavBar/NavBar.vue";
 import MainContent from "@/components/LayOut/MainContent.vue";
 import FooterControl from "@/components/LayOut/FooterControl/FooterControl.vue";
 const dialog = useDialog();
-const MainStore = useMain();
+const MainStore = useMainStore();
 window.$message = useMessage();
 
 const inverted = computed(() =>(MainStore.theme == "darkTheme" ? false : true));

@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-07 10:57:14
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-17 18:03:12
+ * @LastEditTime: 2023-02-18 23:16:06
  * @FilePath: \v3ts1\src\components\LayOut\NavBar\NavBar.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,7 +10,8 @@
 import { computed, ref, toRefs, watch, reactive,onMounted } from "vue";
 import { ChevronBack, ChevronForward, FlashOutline } from "@vicons/ionicons5";
 import { AntCloudOutlined } from "@vicons/antd";
-import useMain from "@/store/MainStore";
+import { onSuccess, onError } from '@/utils/messages'
+import {useMainStore} from "@/store/MainStore";
 import useSong from "@/store/SongStore";
 import { storeToRefs } from "pinia";
 import BasicModal, { ModalApi } from "@/components/Modal/BasicModal.vue";
@@ -39,7 +40,7 @@ import { getSongDetail, getMusicUrl, getLyric } from "@/service/songs";
 import { setToken } from '@/utils/cookie'
 import { throttle } from "lodash";
 
-const MainStore = useMain();
+const MainStore = useMainStore();
 const SongStore = useSong();
 const { profile } = storeToRefs(MainStore);
 const circleUrl = "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg";
@@ -139,9 +140,9 @@ const goLogin = async (e: MouseEvent) => {
   e.preventDefault();
   formRef.value?.validate((errors) => {
     if (!errors) {
-      message.success("验证成功");
+      onSuccess("验证成功");
     } else {
-      message.error("验证失败");
+      onError("验证失败");
       return;
     }
   });
@@ -340,7 +341,6 @@ watch(searchKeyword, throttle(getSearchList, 300))
 onMounted(() => {
   console.log(123);
   let user:any = JSON.parse(window.localStorage.getItem('user')|| '')
-  console.log(user);
   profile.value.avatarUrl = user.avatarUrl
   profile.value.nickname = user.nickname
   profile.value.userId = user.userId

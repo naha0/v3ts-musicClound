@@ -2,12 +2,31 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-02-14 15:18:34
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-17 13:52:30
+ * @LastEditTime: 2023-02-18 22:00:12
  * @FilePath: \v3ts1\src\store\SongStore.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { defineStore } from "pinia";
 import { formatSongTime,formatZero } from "@/utils";
+import {IArNameList,IListRecord } from '@/models/play'
+
+export interface ISongState{
+    arNameList:IArNameList[],
+    arNameString:string,
+    songName:string,
+    playUrl:string,
+    songId:boolean,
+    playTime:number,
+    currentTime:number,
+    sliderVal: number,
+    lyric:string,
+    cover:string,
+    isPlayStatus:boolean,
+    preOrNextSong:string,
+    lyricActive:boolean,
+    listRecord:IListRecord[]
+}
+
 const useSong = defineStore('song', {
     state: () => ({
         // 歌曲作者列表
@@ -42,12 +61,8 @@ const useSong = defineStore('song', {
         handlerAr(state){
             return  (state.arNameString = state.arNameList.map(item=>item.name).join('、'))
         },
-        handlerTime(state){
-            return formatSongTime(state.playTime)
-        },
-        handlerCurrentTime(state){
-            return formatSongTime(state.currentTime)
-        },
+        handlerTime:state=>formatSongTime(state.playTime),
+        handlerCurrentTime:state=>formatSongTime(state.currentTime),
         handlerLyric(state){
             let lyricArr = state.lyric.split("[").slice(1)
             let lrcObj = {};

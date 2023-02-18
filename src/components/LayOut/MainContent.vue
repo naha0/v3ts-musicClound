@@ -93,7 +93,7 @@ const menuOptions: MenuOption[] = [
 </script>
 
 <template>
-  <n-layout has-sider>
+  <n-layout has-sider class="hidden-main">
     <n-layout-sider
       bordered
       show-trigger
@@ -101,7 +101,7 @@ const menuOptions: MenuOption[] = [
       :collapsed-width="64"
       :width="240"
       :native-scrollbar="false"
-      style="height: calc(100vh - 120px);"
+      
     >
       <n-menu
         :inverted="getInverted"
@@ -119,3 +119,10 @@ const menuOptions: MenuOption[] = [
     </n-layout-content>
   </n-layout>
 </template>
+
+<style lang="scss" scoped>
+.hidden-main{
+  height: calc(100vh - 145px);
+  overflow-x: clip;
+}
+</style>

@@ -5,7 +5,7 @@ import { useMessage, useDialog, NButton, NIcon, NGradientText } from "naive-ui";
 import { onMounted, h, computed } from "vue";
 import NavBar from "@/components/LayOut/NavBar/NavBar.vue";
 import MainContent from "@/components/LayOut/MainContent.vue";
-import FooterControl from "@/components/LayOut/FooterControl.vue";
+import FooterControl from "@/components/LayOut/FooterControl/FooterControl.vue";
 const dialog = useDialog();
 const MainStore = useMain();
 window.$message = useMessage();

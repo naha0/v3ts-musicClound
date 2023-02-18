@@ -3,6 +3,7 @@ import { computed, ref, toRefs, watch, reactive } from "vue";
 import { ChevronBack, ChevronForward, FlashOutline } from "@vicons/ionicons5";
 import { AntCloudOutlined } from "@vicons/antd";
 import useMain from "@/store/MainStore";
+import useSong from '@/store/SongStore'
 import { storeToRefs } from "pinia";
 import BasicModal, { ModalApi } from "@/components/Modal/BasicModal.vue";
 import {
@@ -18,11 +19,18 @@ import {
   useMessage,
   FormRules,
 } from "naive-ui";
-import { getCellphone } from "@/service/login";
+import {
+  getCellphone,
+  getQrCode,
+  getQrCodeImg,
+  getQrCodeStatus,
+} from "@/service/login";
 import { getSuggestSearchList, getHotSearchList } from "@/service/search";
+import { getSongDetail,getMusicUrl,getLyric } from "@/service/songs";
 import { throttle } from "lodash";
 
 const MainStore = useMain();
+const SongStore = useSong()
 const { login } = storeToRefs(MainStore);
 const circleUrl = "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg";
 const modal = ref<ModalApi | null>(null);
@@ -85,6 +93,13 @@ const rules: FormRules = {
     },
   ],
 };
+let unikey = "";
+let qrImg = ref("");
+type qrStatus = 800 | 801 | 802 | 803;
+const status = ref<qrStatus>();
+let timer: number;
+const qrShow = ref<boolean>(false);
+const isLoadingQrCodeImg = ref<boolean>(true);
 
 function validatePasswordSame(rule: FormItemRule, value: string): boolean {
   return value === modelRef.password;
@@ -118,12 +133,58 @@ const goLogin = async (e: MouseEvent) => {
       return;
     }
   });
-  console.log(modelRef, 1);
-  const {phone,password} = toRefs(modelRef)
-  const res = await getCellphone(phone.value as string,password.value as string)
-  console.log(modelRef,phone,password
+  const { phone, password } = toRefs(modelRef);
+  const res = await getCellphone(
+    phone.value as string,
+    password.value as string
   );
+  console.log(modelRef, phone, password);
   if (modal.value) modal.value.isModal = true;
+};
+// 切换登录方式
+const changeQr = () => {
+  qrShow.value = true;
+  qrKey();
+};
+
+// 二维码登录
+const qrKey = () => {
+  getQrCode().then((res: any) => {
+    unikey = res.data.unikey;
+    qrCodeImg();
+  });
+};
+const qrCodeImg = () => {
+  getQrCodeImg(unikey).then((res: any) => {
+    console.log(res);
+    qrImg.value = res.data.qrimg;
+    isLoadingQrCodeImg.value = false;
+    loopCheckStatus();
+  });
+};
+const loopCheckStatus = () => {
+  timer = window.setInterval(() => {
+    getQrCodeStatus(unikey).then((res: any) => {
+      if (!timer) return;
+      status.value = res.code;
+      if (status.value === 803) {
+        clearInterval(timer);
+        message.success("授权登录成功");
+        timer = 0;
+        return;
+      }
+      if (status.value === 800) {
+        clearInterval(timer);
+        message.warning("二维码已过期");
+        timer = 0;
+      }
+    });
+  }, 1000);
+};
+const handleRefreshClick = () => {
+  qrImg.value = "";
+  status.value = undefined;
+  qrKey();
 };
 
 // 退出登录
@@ -144,9 +205,7 @@ const getHotList = async () => {
   });
 };
 getHotList();
-const renderLabel = () =>{
-
-}
+const renderLabel = () => {};
 
 // 搜索建议
 const searchKeyword = ref("");
@@ -164,47 +223,49 @@ const getSearchList = async (): Promise<any> => {
     let newArr;
     let albums: IoptionList[] = [
       {
-        label:'专辑',
-        value:'专辑',
-        disabled:true
-      }
+        label: "专辑",
+        value: "专辑",
+        disabled: true,
+      },
     ];
     let artists: IoptionList[] = [
       {
-        label:'歌手',
-        value:'歌手',
-        disabled:true
-      }
+        label: "歌手",
+        value: "歌手",
+        disabled: true,
+      },
     ];
     let songs: IoptionList[] = [
       {
-        label:'单曲',
-        value:'单曲',
-        disabled:true
-      }
+        label: "单曲",
+        value: "单曲",
+        disabled: true,
+      },
     ];
     let playlists: IoptionList[] = [
       {
-        label:'歌单',
-        value:'歌单',
-        disabled:true
-      }
+        label: "歌单",
+        value: "歌单",
+        disabled: true,
+      },
     ];
-    
-    order.forEach((item:string) => {
+
+    order.forEach((item: string) => {
       newArr = result[item].map((i: any) => {
-        if(item === 'songs'){
-          let songsName = i.artists.map((item:any) => item.name).join(' ')
+        if (item === "songs") {
+          let songsName = i.artists.map((item: any) => item.name).join(" ");
           songs.push({
             label: `${i.name} - ${songsName}`,
             value: `${i.name} - ${songsName}`,
-          })
+            id: i.id,
+          });
           console.log(songs);
         }
         if (item === "albums") {
           albums.push({
             label: `${i.name} - ${i.artist.name}`,
             value: `${i.name} - ${i.artist.name}`,
+            id: i.id,
           });
           console.log(albums);
         }
@@ -212,30 +273,47 @@ const getSearchList = async (): Promise<any> => {
           artists.push({
             label: `${i.name}`,
             value: `${i.name}`,
+            id: i.id,
           });
         }
         if (item === "playlists") {
           playlists.push({
             label: `${i.name}`,
             value: `${i.name}`,
+            id: i.id,
           });
         }
       });
     });
     console.log(newArr);
-    selectList = [...songs,...artists,...albums,...playlists]
+    selectList = [...songs, ...artists, ...albums, ...playlists];
     console.log(selectList);
     return result;
   } catch (error) {
     return Promise.reject(error);
   }
 };
+// TODO 获取歌曲详情
+const songDetail = async (value: string, option: any) => {
+  let res:any = await getSongDetail(option.id);
+  let res1:any = await getMusicUrl(option.id)
+  let res2:any = await getLyric(option.id)
+  SongStore.$patch({
+    songName:res.songs[0]?.name,
+    arNameList:res.songs[0].ar,
+    playUrl:res1.data[0].url,
+    songId:res.songs[0].id,
+    playTime:Math.round(res.songs[0].dt / 1000),
+    lyric:res2.lrc.lyric,
+    cover:res.songs[0].al.picUrl
+  })
+};
 watch(searchKeyword, throttle(getSearchList, 300));
 </script>
 
 <template>
   <div
-    class="relative h-59px flex justify-between padding mx-20 my-1 leading-10"
+    class="relative h-15 flex justify-between padding mx-20 my-1 leading-10"
   >
     <div
       class="ml-6 w-45 cursor-pointer align-middle"
@@ -260,7 +338,7 @@ watch(searchKeyword, throttle(getSearchList, 300));
         :options="selectList"
         v-model:value="searchKeyword"
         scrollable
-        v-if="searchKeyword"
+        :on-update:value="songDetail"
       >
         <n-input
           v-model:value="searchKeyword"
@@ -273,7 +351,6 @@ watch(searchKeyword, throttle(getSearchList, 300));
           </template>
         </n-input>
       </n-popselect>
-
     </n-space>
     <div class="flex justify-center leading-15">
       <div class="cursor-pointer" @click="goLogin">
@@ -297,6 +374,7 @@ watch(searchKeyword, throttle(getSearchList, 300));
           label-placement="left"
           label-width="80"
           label-align="left"
+          v-if="!qrShow"
         >
           <n-form-item path="phone" label="手机号">
             <n-input v-model:value="modelRef.phone" @keydown.enter.prevent />
@@ -322,10 +400,47 @@ watch(searchKeyword, throttle(getSearchList, 300));
               @keydown.enter.prevent
             />
           </n-form-item>
+          <n-form-item>
+            <span @click="changeQr">二维码登录</span>
+          </n-form-item>
         </n-form>
+        <n-spin :show="isLoadingQrCodeImg" v-if="qrShow">
+          <div class="relative mt-5">
+            <img
+              class="mx-auto my-auto"
+              v-show="!isLoadingQrCodeImg"
+              width="200"
+              height="200"
+              :src="qrImg"
+            />
+            <!-- 图片加载时占位符 -->
+            <div
+              v-show="isLoadingQrCodeImg"
+              style="width: 200px; height: 200px"
+            />
+
+            <!-- 二维码过期蒙层 -->
+            <div
+              v-if="status === 800"
+              class="flex absolute inset-0 justify-center items-center bg-black/90"
+            >
+              <div class="text-white">
+                <p>二维码已失效</p>
+                <n-button
+                  size="small"
+                  type="primary"
+                  class="mt-4"
+                  @click="handleRefreshClick"
+                >
+                  点击刷新
+                </n-button>
+              </div>
+            </div>
+          </div>
+        </n-spin>
       </template>
       <template #action>
-        <n-row :gutter="[0, 24]">
+        <n-row :gutter="[0, 24]" v-if="!qrShow">
           <n-col :span="24">
             <div style="display: flex; justify-content: flex-end">
               <n-button

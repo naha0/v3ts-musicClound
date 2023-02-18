@@ -7,6 +7,10 @@ import {
   PersonOutline as PersonIcon,
   WineOutline as WineIcon,
 } from "@vicons/ionicons5";
+import useMain from '@/store/MainStore'
+import {getUserPlaylist} from '@/service/user'
+import { onMounted } from "vue";
+const MainStore = useMain()
 
 defineProps<{
   getInverted: boolean;
@@ -15,7 +19,10 @@ defineProps<{
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
-
+onMounted(async()=>{
+  let res:any = await getUserPlaylist(MainStore.profile.userId)
+  
+})
 const menuOptions: MenuOption[] = [
   {
     label: "且听风吟",

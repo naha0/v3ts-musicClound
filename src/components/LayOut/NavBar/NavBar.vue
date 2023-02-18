@@ -1,9 +1,17 @@
+<!--
+ * @Author: naha0 780400335@qq.com
+ * @Date: 2023-01-07 10:57:14
+ * @LastEditors: naha0 780400335@qq.com
+ * @LastEditTime: 2023-02-17 18:03:12
+ * @FilePath: \v3ts1\src\components\LayOut\NavBar\NavBar.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <script setup lang="ts">
-import { computed, ref, toRefs, watch, reactive } from "vue";
+import { computed, ref, toRefs, watch, reactive,onMounted } from "vue";
 import { ChevronBack, ChevronForward, FlashOutline } from "@vicons/ionicons5";
 import { AntCloudOutlined } from "@vicons/antd";
 import useMain from "@/store/MainStore";
-import useSong from '@/store/SongStore'
+import useSong from "@/store/SongStore";
 import { storeToRefs } from "pinia";
 import BasicModal, { ModalApi } from "@/components/Modal/BasicModal.vue";
 import {
@@ -25,13 +33,15 @@ import {
   getQrCodeImg,
   getQrCodeStatus,
 } from "@/service/login";
+import { getUserInfo,getUserDetail } from '@/service/user'
 import { getSuggestSearchList, getHotSearchList } from "@/service/search";
-import { getSongDetail,getMusicUrl,getLyric } from "@/service/songs";
+import { getSongDetail, getMusicUrl, getLyric } from "@/service/songs";
+import { setToken } from '@/utils/cookie'
 import { throttle } from "lodash";
 
 const MainStore = useMain();
-const SongStore = useSong()
-const { login } = storeToRefs(MainStore);
+const SongStore = useSong();
+const { profile } = storeToRefs(MainStore);
 const circleUrl = "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg";
 const modal = ref<ModalApi | null>(null);
 
@@ -119,11 +129,13 @@ const handlePasswordInput = () => {
 
 // 是否登录
 const isLogin = computed(() => {
-  return login.value.profile.userId ? true : false;
+  return profile.value.userId ? true : false;
 });
 
 // 登录
 const goLogin = async (e: MouseEvent) => {
+  console.log(123);
+  qrShow.value = false;
   e.preventDefault();
   formRef.value?.validate((errors) => {
     if (!errors) {
@@ -164,23 +176,39 @@ const qrCodeImg = () => {
 };
 const loopCheckStatus = () => {
   timer = window.setInterval(() => {
-    getQrCodeStatus(unikey).then((res: any) => {
-      if (!timer) return;
-      status.value = res.code;
-      if (status.value === 803) {
-        clearInterval(timer);
-        message.success("授权登录成功");
-        timer = 0;
-        return;
-      }
-      if (status.value === 800) {
-        clearInterval(timer);
-        message.warning("二维码已过期");
-        timer = 0;
-      }
-    });
+      getQrCodeStatus(unikey).then((res: any) => {
+        if(!modal.value?.isModal) window.clearInterval(timer)
+        console.log(modal.value?.isModal);
+        if (!timer) return;
+        status.value = res.code;
+        if (status.value === 803) {
+          clearInterval(timer);
+          message.success("授权登录成功");
+          setToken(res.cookie,7)
+          timer = 0;
+          getUser()
+          return;
+        }
+        if (status.value === 800) {
+          clearInterval(timer);
+          message.warning("二维码已过期");
+          timer = 0;
+        }
+        if(!modal.value?.isModal) return
+      });
   }, 1000);
-};
+}
+// 获取账号信息
+const getUser = async() => {
+  let res:any = await getUserInfo()
+  profile.value.avatarUrl = res.profile.avatarUrl
+  profile.value.nickname = res.profile.nickname
+  profile.value.userId = res.profile.userId
+  window.localStorage.setItem('user',JSON.stringify(profile.value))
+  console.log(res);
+  let res1:any = await getUserDetail(profile.value.userId)
+}
+
 const handleRefreshClick = () => {
   qrImg.value = "";
   status.value = undefined;
@@ -295,25 +323,33 @@ const getSearchList = async (): Promise<any> => {
 };
 // TODO 获取歌曲详情
 const songDetail = async (value: string, option: any) => {
-  let res:any = await getSongDetail(option.id);
-  let res1:any = await getMusicUrl(option.id)
-  let res2:any = await getLyric(option.id)
+  let res: any = await getSongDetail(option.id);
+  let res1: any = await getMusicUrl(option.id);
+  let res2: any = await getLyric(option.id);
   SongStore.$patch({
-    songName:res.songs[0]?.name,
-    arNameList:res.songs[0].ar,
-    playUrl:res1.data[0].url,
-    songId:res.songs[0].id,
-    playTime:Math.round(res.songs[0].dt / 1000),
-    lyric:res2.lrc.lyric,
-    cover:res.songs[0].al.picUrl
-  })
+    songName: res.songs[0]?.name,
+    arNameList: res.songs[0].ar,
+    playUrl: res1.data[0].url,
+    songId: res.songs[0].id,
+    playTime: Math.round(res.songs[0].dt / 1000),
+    lyric: res2.lrc.lyric,
+    cover: res.songs[0].al.picUrl,
+  });
 };
-watch(searchKeyword, throttle(getSearchList, 300));
+watch(searchKeyword, throttle(getSearchList, 300))
+onMounted(() => {
+  console.log(123);
+  let user:any = JSON.parse(window.localStorage.getItem('user')|| '')
+  console.log(user);
+  profile.value.avatarUrl = user.avatarUrl
+  profile.value.nickname = user.nickname
+  profile.value.userId = user.userId
+})
 </script>
 
 <template>
   <div
-    class="relative h-15 flex justify-between padding mx-20 my-1 leading-10"
+    class="relative h-15 flex justify-between padding mx-20 my-1 items-center"
   >
     <div
       class="ml-6 w-45 cursor-pointer align-middle"
@@ -352,16 +388,20 @@ watch(searchKeyword, throttle(getSearchList, 300));
         </n-input>
       </n-popselect>
     </n-space>
-    <div class="flex justify-center leading-15">
-      <div class="cursor-pointer" @click="goLogin">
+    <div class="flex justify-center leading-15 items-center">
+      <div
+        class="cursor-pointer flex justify-center items-center"
+        @click="goLogin"
+      >
         <n-avatar
           round
           size="large"
-          :src="isLogin ? login.profile.avatarUrl : circleUrl"
+          :src="isLogin ? profile.avatarUrl : circleUrl"
+          class="text-#5dc3fe"
         />
-        {{ isLogin ? login.profile.nickname : "未登录" }}
+        {{ isLogin ? profile.nickname : "未登录" }}
       </div>
-      <div class="ml-20px" @click="getLogout">退出</div>
+      <div class="ml-2" @click="getLogout" v-if="profile.nickname">退出</div>
     </div>
   </div>
   <teleport to="body">

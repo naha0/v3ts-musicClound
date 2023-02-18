@@ -1,16 +1,31 @@
-import service from './request';
+/*
+ * @Author: naha0 780400335@qq.com
+ * @Date: 2023-01-06 16:26:22
+ * @LastEditors: naha0 780400335@qq.com
+ * @LastEditTime: 2023-02-17 15:32:18
+ * @FilePath: \v3ts1\src\service\user.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import hyRequest from "@/service/api";
 import qs from 'qs';
 // 获取账号信息
 export function getUserInfo() {
-  return service.get('/user/account');
+  return hyRequest.get({
+    url:'/user/account'
+  });
 }
 //获取用户详情
 export function getUserDetail(uid:string) {
-  return service.get('/user/detail?uid='+uid);
+  return hyRequest.get({
+    url:'/user/detail',
+    params:{
+      uid
+    }
+  })
 }
 // 签到
 export function signIn() {
-  return service.post('/daily_signin?timestamp=' + Date.now()+'&type=1');
+  return hyRequest.post('/daily_signin?timestamp=' + Date.now()+'&type=1');
 }
 //更新用户信息
 export function updateUserInfo(data:{
@@ -25,7 +40,7 @@ export function updateUserInfo(data:{
     ...data,
     timestamp: Date.now()
   });
-  return service.get('/user/update?'+params);
+  return hyRequest.get('/user/update?'+params);
 }
 // 更新头像
 export function updateUserAvatar(file: File, imgSize:number) {
@@ -33,7 +48,7 @@ export function updateUserAvatar(file: File, imgSize:number) {
   formData.append('imgFile', file);
   const params = { timestamp: Date.now(), imgSize };
   const url = '/avatar/upload?'+qs.stringify(params);
-  return service.post(
+  return hyRequest.post(
     url, formData, { headers: { 'Content-Type': 'multipart/form-data' } }
   );  
 }
@@ -49,11 +64,16 @@ export function sendComment(data: {
     ...data,
     timestamp: Date.now()
   });
-  return service.get('/comment?'+params);
+  return hyRequest.get('/comment?'+params);
 }
 //获取用户歌单
 export function getUserPlaylist(uid:number) {
-  return service.get('/user/playlist?uid='+uid);
+  return hyRequest.get({
+    url:'/user/playlist',
+    params:{
+      uid
+    }
+  });
 }
 // 给评论点赞
 export function likeComment(data:{
@@ -66,9 +86,9 @@ export function likeComment(data:{
     ...data,
     timestamp: Date.now()
   });
-  return service.get('/comment/like?'+params);
+  return hyRequest.get('/comment/like?'+params);
 }
 // 获取登录状态
 export function getLoginStatus() {
-  return service.get('/login/status?timestamp='+Date.now());
+  return hyRequest.get('/login/status?timestamp='+Date.now());
 }

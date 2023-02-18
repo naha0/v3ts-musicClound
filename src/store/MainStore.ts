@@ -2,16 +2,17 @@ import { defineStore } from "pinia";
 
 const useMain = defineStore('main', {
     state: () => ({
+        // 主题
         theme: '',
-        login: {
-            token: '',
-            code: '',
-            profile: {
-                avatarUrl: '',
-                nickname: '',
-                userId: ''
-            }
-        }
+        token: '',
+        // 用户信息
+        profile: {
+            avatarUrl: '',
+            nickname: '',
+            userId: 0
+        },
+        // 用户歌单
+        userPlaylist:[]
     }),
     getters: {
         getTheme(): string {

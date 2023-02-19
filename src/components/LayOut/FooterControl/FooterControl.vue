@@ -12,6 +12,8 @@ import {useSong} from "@/store/modules/SongStore";
 import { IsongRecord } from "./index";
 const SongStore = useSong();
 const audioPlayer = ref();
+const preColor = ref('')
+const nextColor = ref('')
 // 改变播放状态
 const changeState = (status: boolean) => {
   SongStore.isPlayStatus = status;
@@ -75,6 +77,19 @@ const nextSong = () => {
     arNameString:  nextItem[0].arNameString
   });
 };
+
+watch(()=>[SongStore.listRecord,SongStore.songId],(newValue)=>{
+  const listRecord:any = newValue[0]
+  const songId = newValue[1]
+  console.log(listRecord,songId);
+  console.log(newValue,newValue.length);
+  listRecord.length <= 2 ? (preColor.value = '#A6A6A6') : (preColor.value = '#000')
+  console.log(listRecord.some((item:any) => item.songId === songId));
+  listRecord.some((item:any) => item.songId === songId) ? (nextColor.value = '#A6A6A6') : (nextColor.value = '#000')
+
+},{
+  deep:true
+})
 </script>
 
 <template>
@@ -107,7 +122,7 @@ const nextSong = () => {
       </n-space>
       <div class="flex flex-col w-3/5">
         <div class="flex flex-row w-full justify-center items-center">
-          <n-icon size="15" @click="preSong">
+          <n-icon size="15" @click="preSong" :color="preColor">
             <PlaySkipBack />
           </n-icon>
           <n-icon
@@ -126,7 +141,7 @@ const nextSong = () => {
           >
             <CaretForwardCircleOutline />
           </n-icon>
-          <n-icon size="15" class="mr-20" @click="nextSong">
+          <n-icon size="15" class="mr-20" @click="nextSong" :color="nextColor">
             <PlaySkipForward />
           </n-icon>
           <span @click="showLyric">词</span>

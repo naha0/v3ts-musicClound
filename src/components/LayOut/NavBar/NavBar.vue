@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-07 10:57:14
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-19 14:27:45
+ * @LastEditTime: 2023-02-19 21:07:51
  * @FilePath: \v3ts1\src\components\LayOut\NavBar\NavBar.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -23,9 +23,11 @@ import { getSuggestSearchList, getHotSearchList } from '@/service/search';
 import { getSongDetail, getMusicUrl, getLyric } from '@/service/songs';
 import { setToken } from '@/utils/cookie';
 import { throttle } from 'lodash';
+import { usePlay } from '@/hooks/usePlaySonglist'
 
 const MainStore = useMain();
 const SongStore = useSong();
+const { playListRecord } = usePlay()
 const { profile } = storeToRefs(MainStore);
 const circleUrl = 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg';
 const modal = ref<ModalApi | null>(null);
@@ -304,19 +306,20 @@ const getSearchList = async (): Promise<any> => {
   }
 };
 // TODO 获取歌曲详情
-const songDetail = async (value: string, option: any) => {
-  let res: any = await getSongDetail(option.id);
-  let res1: any = await getMusicUrl(option.id);
-  let res2: any = await getLyric(option.id);
-  SongStore.$patch({
-    songName: res.songs[0]?.name,
-    arNameList: res.songs[0].ar,
-    playUrl: res1.data[0].url,
-    songId: res.songs[0].id,
-    playTime: Math.round(res.songs[0].dt / 1000),
-    lyric: res2.lrc.lyric,
-    cover: res.songs[0].al.picUrl,
-  });
+const songDetail = (value: string, option: any) => {
+  playListRecord(value,option.id)
+  // let res: any = await getSongDetail(option.id);
+  // let res1: any = await getMusicUrl(option.id);
+  // let res2: any = await getLyric(option.id);
+  // SongStore.$patch({
+  //   songName: res.songs[0]?.name,
+  //   arNameList: res.songs[0].ar,
+  //   playUrl: res1.data[0].url,
+  //   songId: res.songs[0].id,
+  //   playTime: Math.round(res.songs[0].dt / 1000),
+  //   lyric: res2.lrc.lyric,
+  //   cover: res.songs[0].al.picUrl,
+  // });
 };
 watch(searchKeyword, throttle(getSearchList, 300));
 onMounted(() => {
@@ -331,7 +334,7 @@ onMounted(() => {
 <template>
   <div class="relative h-15 flex justify-between padding mx-20 my-1 items-center">
     <div class="ml-6 w-45 cursor-pointer align-middle" @click="$router.push('/home/hi')">
-      <n-space>
+      <n-space class="items-center">
         <n-icon size="40">
           <AntCloudOutlined />
         </n-icon>
@@ -365,7 +368,7 @@ onMounted(() => {
           round
           size="large"
           :src="isLogin ? profile.avatarUrl : circleUrl"
-          class="text-#5dc3fe"
+          class="text-#5dc3fe mr-2"
         />
         {{ isLogin ? profile.nickname : '未登录' }}
       </div>
@@ -373,7 +376,7 @@ onMounted(() => {
     </div>
   </div>
   <teleport to="body">
-    <basic-modal :basicProps="basicProps" ref="modal">
+    <basic-modal :basicProps="basicProps" ref="modal" v-memo>
       <template #default>
         <n-form
           ref="formRef"

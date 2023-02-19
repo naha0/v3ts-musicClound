@@ -17,7 +17,7 @@ declare module '@vue/runtime-core' {
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Lyric: typeof import('./src/components/Lyric/index.vue')['default']
     'Lyric.vue': typeof import('./src/components/Lyric.vue/index.vue')['default']
-    Main: typeof import('./src/components/LayOut/main.vue')['default']
+    Main: typeof import('./src/components/Main/index.vue')['default']
     MainContent: typeof import('./src/components/LayOut/MainContent.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NavBar: typeof import('./src/components/LayOut/NavBar/NavBar.vue')['default']

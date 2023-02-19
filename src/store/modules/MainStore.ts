@@ -1,15 +1,26 @@
-import {store} from '@/store';
-import { IMainStateProps } from './MainStore';
+import { getUserPlaylist } from '@/service/user';
+/*
+ * @Author: naha0 780400335@qq.com
+ * @Date: 2023-01-06 16:29:47
+ * @LastEditors: naha0 780400335@qq.com
+ * @LastEditTime: 2023-02-19 17:02:35
+ * @FilePath: \v3ts1\src\store\modules\MainStore.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { store} from '@/store';
 import { defineStore } from "pinia";
-import {onError} from '@/utils/messages'
-import {IUserProfile,IUserPlaylist} from '@/models/user'
-import {getUserPlaylist} from '@/service/user'
+import { IUserProfile,IUserPlayCategory } from '@/models/user'
+import { getUserPlaylist } from '@/service/user'
+import { onError } from '@/utils/messages'
+import { renderIcon } from '@/utils/render'
+import { QueueMusicFilled as MusicIcon } from '@vicons/material';
+
 
 export interface IMainStateProps{
     theme?:string;
     token?:string;
     profile:IUserProfile;
-    userPlaylist?:IUserPlaylist[]
+    userPlaylist:IUserPlayCategory[]
 }
 
 export const useMain = defineStore({
@@ -36,7 +47,26 @@ export const useMain = defineStore({
         async onUserPlaylistAction(userId:number){
             try {
                 const res = await getUserPlaylist(userId)
-                if(res.code === '200') this.userPlaylist = res.playlist
+                if(res.code === 200){
+                    let newPlaylist = [{
+                        name: '创建的歌单',
+                        nameChildren: res.playlist.filter(item=> item.userId === this.profile.userId)
+                    },{
+                        name: '收藏的歌单',
+                        nameChildren: res.playlist.filter(item => item.userId !== this.profile.userId)
+                    }]
+                    this.userPlaylist = newPlaylist.map((item:any) => {
+                        return {
+                          name:item.name,
+                          nameChildren:item.nameChildren.map((item1: any) => {
+                            return {
+                              ...item1,
+                              icon: renderIcon(MusicIcon),
+                            }
+                          })
+                        }
+                      });
+                }
             } catch (error) {
                 onError(`${error}`);
             }

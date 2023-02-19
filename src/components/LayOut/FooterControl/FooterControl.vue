@@ -8,7 +8,7 @@ import {
 } from "@vicons/ionicons5";
 import { ref, watch } from "vue";
 import Lyric from "@/components/Lyric/index.vue";
-import useSong from "@/store/SongStore";
+import {useSong} from "@/store/modules/SongStore";
 import { IsongRecord } from "./index";
 const SongStore = useSong();
 const audioPlayer = ref();

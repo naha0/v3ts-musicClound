@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-02-14 15:18:34
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-19 21:59:46
+ * @LastEditTime: 2023-02-20 15:47:55
  * @FilePath: \v3ts1\src\store\SongStore.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,7 +11,7 @@ import { defineStore } from "pinia";
 import { formatSongTime, formatZero } from "@/utils";
 import { IArNameList, IListRecord } from '@/models/play'
 
-export interface ISongState {
+interface ISongState {
     arNameList: IArNameList[],
     arNameString: string,
     songName: string,
@@ -28,7 +28,7 @@ export interface ISongState {
     listRecord: IListRecord[]
 }
 
-export const useSong = defineStore({
+export const useSongStore = defineStore({
     id: 'song',
     state: () => ({
         // 歌曲作者列表
@@ -82,7 +82,7 @@ export const useSong = defineStore({
         },
         handlerListRecord(state) {
             console.log(1);
-                console.log(2);
+            console.log(2);
                 state.listRecord.push({
                     songId: state.songId,
                     songName: state.songName,
@@ -105,5 +105,5 @@ export const useSong = defineStore({
 
 /** 在 setup 外使用 */
 export function useSongStoreWidthOut() {
-    return useSong(store)
+    return useSongStore(store)
 }

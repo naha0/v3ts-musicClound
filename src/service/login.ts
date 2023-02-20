@@ -42,9 +42,9 @@ export function getQrCodeStatus(key:string) {
   });
 }
 // 退出登录
-export function logout() {
-  return hyRequest.get({
-    url:'/logout',
-    timestamp:new Date().getTime()
-  });
-}
+// export function logout() {
+//   return hyRequest.get({
+//     url:'/logout',
+//     timestamp:new Date().getTime()
+//   });
+// }

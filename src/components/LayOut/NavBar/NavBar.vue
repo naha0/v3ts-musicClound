@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-07 10:57:14
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-19 21:07:51
+ * @LastEditTime: 2023-02-20 15:26:00
  * @FilePath: \v3ts1\src\components\LayOut\NavBar\NavBar.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,22 +11,21 @@ import { computed, ref, toRefs, watch, reactive, onMounted } from 'vue';
 import { ChevronBack, ChevronForward, FlashOutline } from '@vicons/ionicons5';
 import { AntCloudOutlined } from '@vicons/antd';
 import { onSuccess, onError } from '@/utils/messages';
-import { useMain } from '@/store/modules/MainStore';
-import { useSong } from '@/store/modules/SongStore';
+import { useUserStore } from '@/store/modules/UserStore';
+import { useSongStore } from '@/store/modules/SongStore';
 import { storeToRefs } from 'pinia';
 import BasicModal, { ModalApi } from '@/components/Modal/BasicModal.vue';
 import { ModelType, IsearchKeyword, IhotSearchList, IoptionList } from './index';
 import { FormInst, FormItemInst, FormItemRule, useMessage, FormRules } from 'naive-ui';
-import { getCellphone, getQrCode, getQrCodeImg, getQrCodeStatus } from '@/service/login';
+import { getCellphone, getQrCode, getQrCodeImg, getQrCodeStatus } from '@/service/index';
 import { getUserInfo, getUserDetail } from '@/service/user';
 import { getSuggestSearchList, getHotSearchList } from '@/service/search';
-import { getSongDetail, getMusicUrl, getLyric } from '@/service/songs';
 import { setToken } from '@/utils/cookie';
 import { throttle } from 'lodash';
 import { usePlay } from '@/hooks/usePlaySonglist'
 
-const MainStore = useMain();
-const SongStore = useSong();
+const MainStore = useUserStore();
+const SongStore = useSongStore();
 const { playListRecord } = usePlay()
 const { profile } = storeToRefs(MainStore);
 const circleUrl = 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg';

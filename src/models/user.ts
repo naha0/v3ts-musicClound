@@ -17,7 +17,7 @@ export interface IUserPlaylist{
     id: number | null;
     coverImgUrl: string | null;
     userId:number | null;
-    [propName:string]?:any;
+    [propName:string]: any;
 }
 
 export interface IUserPlayCategory{

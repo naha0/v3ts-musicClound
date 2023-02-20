@@ -1,30 +1,11 @@
-// import axios from 'axios';
-// // create axios instance
-// const instance = axios.create({
-//   baseURL: 'https://lianghj.top:3000',
-//   method: 'get',
-//   timeout:10000,
-//   withCredentials: true
-// });
-
-// //add request interceptor
-// instance.interceptors.request.use((config) => {
-//   return config;
-// }, err => {
-//   return Promise.reject(err);
-// });
-
-// //response interceptor
-// instance.interceptors.response.use((data) => {
-//   return data;
-// }, err => {
-//   window.$message.error('network error');
-//   return Promise.reject(err);
-// });
-
-// export default instance;
-
-
+/*
+ * @Author: naha0 780400335@qq.com
+ * @Date: 2023-01-06 16:26:22
+ * @LastEditors: naha0 780400335@qq.com
+ * @LastEditTime: 2023-02-20 15:05:26
+ * @FilePath: \v3ts1\src\service\request\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import axios, { Axios } from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import type { HyRequestInterceptors,HyRequestConfig} from './type'
@@ -66,9 +47,9 @@ class HyRequest {
     this.instance.interceptors.response.use(
         (res) => {
             console.log('所有的实例都有的拦截器,响应成功');
-            setTimeout(()=>{
-                this.loading?.close()
-            },1000)
+            // setTimeout(()=>{
+            //     this.loading?.close()
+            // },1000)
             return res.data
         },
         (err) => {

@@ -2,13 +2,13 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-07 09:32:40
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-19 14:29:24
+ * @LastEditTime: 2023-02-20 15:46:06
  * @FilePath: \v3ts1\src\view\LayOut.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup lang="ts">
 import { CashOutline as CashIcon } from "@vicons/ionicons5";
-import { useMain } from "@/store/modules/MainStore";
+import { useUserStore } from "@/store/modules/UserStore.js";
 import { useDialog, NButton, NIcon, NGradientText } from "naive-ui";
 import { onMounted, h, computed } from "vue";
 import NavBar from "@/components/LayOut/NavBar/NavBar.vue";
@@ -17,9 +17,9 @@ import FooterControl from "@/components/LayOut/FooterControl/FooterControl.vue";
 import { onSuccess } from "@/utils/messages";
 
 const dialog = useDialog();
-const MainStore = useMain();
+const UserStore = useUserStore();
 
-const inverted = computed(() => (MainStore.theme == "darkTheme" ? false : true));
+const inverted = computed(() => (UserStore.theme == "darkTheme" ? false : true));
 const buttonRender = () => {
   return h("div", null, [
     h(
@@ -27,7 +27,7 @@ const buttonRender = () => {
       {
         ghost: true,
         color: "rgb(197, 161, 161)",
-        onClick: () => (MainStore.theme = "null"),
+        onClick: () => (UserStore.theme = "null"),
         style: {
           margin: " 0 10px 0 0",
         },
@@ -45,7 +45,7 @@ const buttonRender = () => {
       {
         ghost: true,
         color: "#282c34",
-        onClick: () => (MainStore.theme = "darkTheme"),
+        onClick: () => (UserStore.theme = "darkTheme"),
       },
       {
         default: () => "暗色",

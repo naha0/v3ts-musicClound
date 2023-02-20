@@ -1,7 +1,6 @@
 import { IDataType } from './typed';
 import qs from 'qs';
 import hyRequest from "@/service/api";
-import { IDataType } from "@/service/typed";
 // 默认搜索关键词
 export function getDefaultSearchKeyword() {
   return hyRequest.get('/search/default');

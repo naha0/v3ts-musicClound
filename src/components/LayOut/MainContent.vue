@@ -2,19 +2,21 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-07 16:23:41
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-19 19:14:09
+ * @LastEditTime: 2023-02-20 15:55:38
  * @FilePath: \v3ts1\src\components\LayOut\MainContent.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useUser } from '@/hooks/useUserPlaylist';
-import { useMain } from '@/store/modules/MainStore';
+import { useMain } from '@/hooks/useMainContent'
+import { useUserStore } from '@/store/modules/UserStore.js';
 import { storeToRefs } from 'pinia';
 
-const MainStore = useMain();
-const { userPlaylist } = storeToRefs(MainStore);
+const userStore = useUserStore();
+const { userPlaylist } = storeToRefs(userStore);
 const { userHPlayList } = useUser();
+const { mainBannerList } = useMain()
 
 defineProps<{
   getInverted: boolean;
@@ -22,6 +24,7 @@ defineProps<{
 
 onMounted(() => {
   userHPlayList();
+  mainBannerList()
 });
 </script>
 
@@ -44,12 +47,10 @@ onMounted(() => {
         children-field="nameChildren"
       />
     </n-layout-sider>
-    <div class="bg-black w-300 h-100">
-      <router-view></router-view>
-    </div>
-    <!-- <n-layout-content ref="contentRef" content-style="padding: 24px;" :native-scrollbar="false">
-      <RouterView></RouterView>
-    </n-layout-content> -->
+    <n-layout-content ref="contentRef" content-style="padding: 24px;" :native-scrollbar="false">
+      <router-view />
+      1231313
+    </n-layout-content>
   </n-layout>
 </template>
 

@@ -5,15 +5,15 @@ import {
   PlaySkipBack,
   PlaySkipForward,
   ListCircleOutline,
-} from "@vicons/ionicons5";
-import { ref, watch } from "vue";
-import Lyric from "@/components/Lyric/index.vue";
-import {useSong} from "@/store/modules/SongStore";
-import { IsongRecord } from "./index";
-const SongStore = useSong();
+} from '@vicons/ionicons5';
+import { ref, watch } from 'vue';
+import Lyric from '@/components/Lyric/index.vue';
+import { useSongStore } from '@/store/modules/SongStore';
+import { IsongRecord } from './index';
+const SongStore = useSongStore();
 const audioPlayer = ref();
-const preColor = ref('')
-const nextColor = ref('')
+const preColor = ref('');
+const nextColor = ref('');
 // 改变播放状态
 const changeState = (status: boolean) => {
   SongStore.isPlayStatus = status;
@@ -45,51 +45,50 @@ const preSong = () => {
   let currentIndex = SongStore.listRecord.findIndex(
     (item: any) => item.songId === SongStore.songId
   );
-  let preItem: IsongRecord[] = SongStore.listRecord.slice(
-    currentIndex - 1,
-    currentIndex
-  );
+  let preItem: IsongRecord[] = SongStore.listRecord.slice(currentIndex - 1, currentIndex);
   SongStore.$patch({
     songId: preItem[0].songId,
-    songName:  preItem[0].songName,
-    playUrl:  preItem[0].playUrl,
-    playTime:  preItem[0].playTime,
-    cover:  preItem[0].cover,
-    arNameString:  preItem[0].arNameString
+    songName: preItem[0].songName,
+    playUrl: preItem[0].playUrl,
+    playTime: preItem[0].playTime,
+    cover: preItem[0].cover,
+    arNameString: preItem[0].arNameString,
   });
-  console.log(currentIndex,preItem);
+  console.log(currentIndex, preItem);
 };
 // 点击下一首
 const nextSong = () => {
   let currentIndex = SongStore.listRecord.findIndex(
     (item: any) => item.songId === SongStore.songId
   );
-  let nextItem: IsongRecord[] = SongStore.listRecord.slice(
-    currentIndex+1,
-    currentIndex+2
-  );
+  let nextItem: IsongRecord[] = SongStore.listRecord.slice(currentIndex + 1, currentIndex + 2);
   SongStore.$patch({
     songId: nextItem[0].songId,
-    songName:  nextItem[0].songName,
-    playUrl:  nextItem[0].playUrl,
-    playTime:  nextItem[0].playTime,
-    cover:  nextItem[0].cover,
-    arNameString:  nextItem[0].arNameString
+    songName: nextItem[0].songName,
+    playUrl: nextItem[0].playUrl,
+    playTime: nextItem[0].playTime,
+    cover: nextItem[0].cover,
+    arNameString: nextItem[0].arNameString,
   });
 };
 
-watch(()=>[SongStore.listRecord,SongStore.songId],(newValue)=>{
-  const listRecord:any = newValue[0]
-  const songId = newValue[1]
-  console.log(listRecord,songId);
-  console.log(newValue,newValue.length);
-  listRecord.length <= 2 ? (preColor.value = '#A6A6A6') : (preColor.value = '#000')
-  console.log(listRecord.some((item:any) => item.songId === songId));
-  listRecord.some((item:any) => item.songId === songId) ? (nextColor.value = '#A6A6A6') : (nextColor.value = '#000')
-
-},{
-  deep:true
-})
+watch(
+  () => [SongStore.listRecord, SongStore.songId],
+  newValue => {
+    const listRecord: any = newValue[0];
+    const songId = newValue[1];
+    console.log(listRecord, songId);
+    console.log(newValue, newValue.length);
+    listRecord.length <= 2 ? (preColor.value = '#A6A6A6') : (preColor.value = '#000');
+    console.log(listRecord.some((item: any) => item.songId === songId));
+    listRecord.some((item: any) => item.songId === songId)
+      ? (nextColor.value = '#A6A6A6')
+      : (nextColor.value = '#000');
+  },
+  {
+    deep: true,
+  }
+);
 </script>
 
 <template>
@@ -188,7 +187,7 @@ watch(()=>[SongStore.listRecord,SongStore.songId],(newValue)=>{
 :deep(.n-drawer-mask) {
   background-color: transparent;
 }
-.prevent-scroll{
+.prevent-scroll {
   ::-webkit-scrollbar {
     width: 0;
     height: 10px;

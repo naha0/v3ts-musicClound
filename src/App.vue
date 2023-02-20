@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2022-12-31 10:04:25
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-19 18:44:58
+ * @LastEditTime: 2023-02-20 15:53:57
  * @FilePath: \v3ts1\src\App.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,20 +11,20 @@ import { computed } from 'vue';
 import { zhCN } from 'naive-ui';
 import { NConfigProvider, GlobalThemeOverrides } from 'naive-ui';
 import { darkTheme } from 'naive-ui';
-import { useMain } from '@/store/modules/MainStore';
+import { useUserStore } from '@/store/modules/UserStore.js';
 import LayOut from '@/view/LayOut.vue';
 
-const MainStore = useMain();
+const userStore = useUserStore();
 const themeOverrides: GlobalThemeOverrides = {
   common: {
-    baseColor: MainStore.getBaseColor,
-    primaryColor: MainStore.getTextColor,
+    baseColor: userStore.getBaseColor,
+    primaryColor: userStore.getTextColor,
   },
   Button: {
-    textColor: MainStore.getBaseColor,
+    textColor: userStore.getBaseColor,
   },
 };
-const themeVal = computed(() => (MainStore.theme == 'darkTheme' ? darkTheme : undefined));
+const themeVal = computed(() => (userStore.theme == 'darkTheme' ? darkTheme : undefined));
 </script>
 
 <template>

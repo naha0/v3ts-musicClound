@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-07 16:23:41
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-21 16:00:57
+ * @LastEditTime: 2023-02-21 17:46:12
  * @FilePath: \v3ts1\src\components\LayOut\MainContent.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,6 +13,7 @@ import { useMain } from '@/hooks/useMainContent';
 import { useUserStore } from '@/store/modules/UserStore.js';
 import { useMainStore } from '@/store/modules/MainStore.js';
 import { storeToRefs } from 'pinia';
+import {MenuOption} from 'naive-ui'
 
 const userStore = useUserStore();
 const mainStore = useMainStore();
@@ -25,7 +26,10 @@ defineProps<{
 }>();
 
 let currentComponent = shallowRef(TABS_TYPE[0].component)
-
+const updateMenu = (key: string, item: MenuOption) => {
+  console.log(key,item);
+  
+}
 watch(() => mainStore.componentName,(newValue)=>{
   console.log(newValue);
   let index = TABS_TYPE.findIndex(item=> item.componentName === newValue)
@@ -55,6 +59,7 @@ onMounted(() => {
         :options="userPlaylist"
         label-field="name"
         children-field="nameChildren"
+        :on-update:value="updateMenu"
       />
     </NLayoutSider>
     <NLayoutContent ref="contentRef" content-style="padding: 24px;" :native-scrollbar="false">

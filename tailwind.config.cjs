@@ -6,7 +6,8 @@ module.exports = {
       colors: {
         'black': '#252525',
         'secondBack': '#202020',
-        'white': 'rgba(255, 255, 255, 0.82);'
+        'white': 'rgba(255, 255, 255, 0.82);',
+        'blue':'#5dc3fe'
       },
       screens: { 'sm': { 'min': '350px', 'max': '767px' } },
       height: { 'main': 'calc(100vh - 3.5rem)' },

@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-06 11:46:36
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-20 15:11:14
+ * @LastEditTime: 2023-02-21 10:08:24
  * @FilePath: \v3ts1\src\router\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,14 +19,14 @@ const routes:RouteRecordRaw[] = [
     component: () => import("@/view/home/index.vue")
   },
   {
-    path: "/detail",
-    name: "Detail",
-    component: () => import("@/view/detail/index.vue")
+    path: "/customized",
+    name: "Customized",
+    component: () => import("@/view/customized/index.vue")
   },
   {
-    path: "/home1",
-    name: "Home1",
-    component: () => import("@/components/HelloWorld.vue")
+    path: "/playlist",
+    name: "Playlist",
+    component: () => import("@/view/playlist/index.vue")
   },
 ];
 

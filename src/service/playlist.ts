@@ -100,16 +100,18 @@ export function getPlaylistAllDetail(data:{
 //   });
 //   return hyRequest.get('/playlist/subscribe?'+query);
 // }
-// // 歌单评论
-// export function getPlaylistComment(data:{
-//   id:string;
-//   limit?:number;
-//   offset?:number;
-//   before?:string;
-// }) {
-//   const query = qs.stringify(data);
-//   return hyRequest.get('/comment/playlist?'+query);
-// }
+// 歌单评论
+export function getPlaylistComment(id:string) {
+  return hyRequest.get({
+    url:'/comment/new',
+    params:{
+      type:2,
+      id:id,
+      pageSize:1000,
+      sortType:1
+    }
+  });
+}
 // // 相似歌单
 // export function getSimilarPlaylist(id:string) {
 //   return hyRequest.get('/simi/playlist?id='+id);

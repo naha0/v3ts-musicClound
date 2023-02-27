@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-07 10:57:14
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-20 15:26:00
+ * @LastEditTime: 2023-02-22 14:16:23
  * @FilePath: \v3ts1\src\components\LayOut\NavBar\NavBar.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -304,21 +304,9 @@ const getSearchList = async (): Promise<any> => {
     return Promise.reject(error);
   }
 };
-// TODO 获取歌曲详情
+
 const songDetail = (value: string, option: any) => {
   playListRecord(value,option.id)
-  // let res: any = await getSongDetail(option.id);
-  // let res1: any = await getMusicUrl(option.id);
-  // let res2: any = await getLyric(option.id);
-  // SongStore.$patch({
-  //   songName: res.songs[0]?.name,
-  //   arNameList: res.songs[0].ar,
-  //   playUrl: res1.data[0].url,
-  //   songId: res.songs[0].id,
-  //   playTime: Math.round(res.songs[0].dt / 1000),
-  //   lyric: res2.lrc.lyric,
-  //   cover: res.songs[0].al.picUrl,
-  // });
 };
 watch(searchKeyword, throttle(getSearchList, 300));
 onMounted(() => {
@@ -332,7 +320,7 @@ onMounted(() => {
 
 <template>
   <div class="relative h-15 flex justify-between padding mx-20 my-1 items-center">
-    <div class="ml-6 w-45 cursor-pointer align-middle" @click="$router.push('/home/hi')">
+    <div class="ml-6 w-45 cursor-pointer align-middle" @click="$router.push('/home')">
       <n-space class="items-center">
         <n-icon size="40">
           <AntCloudOutlined />

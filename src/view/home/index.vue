@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-06 15:23:25
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-21 16:01:37
+ * @LastEditTime: 2023-02-24 11:51:57
  * @FilePath: \v3ts1\src\view\home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -37,7 +37,7 @@
     <n-grid :x-gap="12" :y-gap="8" :cols="5">
       <template v-for="(item, index) in mainStore.personalized" :key="index">
         <n-grid-item>
-          <div class="image-text relative">
+          <div class="image-text relative" @click="playListDetailClick(item.id)">
             <n-image class="w-full h-40 rounded" :src="item.picUrl" preview-disabled />
             <div class="h-10 mt-1">{{ item.name }}</div>
             <n-space class="absolute top-2 right-2">
@@ -60,12 +60,22 @@ import { useMainStore } from '@/store/modules/MainStore';
 import { ChevronForward, CaretForwardCircleOutline } from '@vicons/ionicons5';
 import { formatNumUnit } from '@/utils/index';
 import { useRouter } from 'vue-router';
-const { mainHomeList, TABS_TYPE } = useMain();
+
+const { mainHomeList } = useMain();
+
 const mainStore = useMainStore();
 const router = useRouter();
+const playListDetailClick = async(id:number) => {
+  router.push({
+    path:"/detail",
+    query:{
+      id:id
+    }
+  })
+}
+
 const goPlaylist = () => {
-  console.log(111);
-  mainStore.componentName = 'Playlist';
+  mainStore.componentName = 'playlist';
   router.push({
     path:'/playlist'
   })

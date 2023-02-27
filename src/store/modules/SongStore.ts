@@ -9,8 +9,9 @@
 import { store } from '@/store';
 import { defineStore } from "pinia";
 import { formatSongTime, formatZero } from "@/utils";
+import { getSongDetail, getMusicUrl, getLyric } from '@/service/index';
 import { IArNameList, IListRecord } from '@/models/play'
-
+import { onError } from '@/utils/messages';
 interface ISongState {
     arNameList: IArNameList[],
     arNameString: string,
@@ -81,8 +82,6 @@ export const useSongStore = defineStore({
             return lrcObj
         },
         handlerListRecord(state) {
-            console.log(1);
-            console.log(2);
                 state.listRecord.push({
                     songId: state.songId,
                     songName: state.songName,
@@ -99,7 +98,23 @@ export const useSongStore = defineStore({
         }        
     },
     actions: {
-
+        async onSongSuggestAction(id:number){
+            try {
+                let res: any = await getSongDetail(id);
+                let res1: any = await getMusicUrl(id);
+                let res2: any = await getLyric(id);
+                this.songName = res.songs[0]?.name
+                this.arNameList = res.songs[0].ar
+                this.playUrl = res1.data[0].url
+                this.songId = res.songs[0].id
+                this.playTime = Math.round(res.songs[0].dt / 1000)
+                this.lyric = res2.lrc.lyric
+                this.cover = res.songs[0].al.picUrl
+            } catch(error) {
+                onError(`${error}`);
+            }
+            
+        },
     }
 })
 

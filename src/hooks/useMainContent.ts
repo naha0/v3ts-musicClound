@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-02-20 15:36:26
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-21 17:45:44
+ * @LastEditTime: 2023-02-22 14:09:34
  * @FilePath: \v3ts1\src\hooks\useMainContent.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,17 +17,17 @@ export const useMain = () => {
   const TABS_TYPE = [
     {
       name: '个性推荐',
-      componentName: 'Home',
+      componentName: 'home',
       component: markRaw(Home),
     },
     {
       name: '专属定制',
-      componentName: 'Customized',
+      componentName: 'customized',
       component: markRaw(Customized),
     },
     {
       name: '歌单',
-      componentName: 'Playlist',
+      componentName: 'playlist',
       component: markRaw(Playlist),
     },
   ];
@@ -38,9 +38,7 @@ export const useMain = () => {
   const mainPlaylist = () => {
     MainStore.onMainTopPlayListTags();
   };
-  const mainPlaylistDetail = () => {
-
-  }
+  
   return {
     TABS_TYPE,
     mainHomeList,

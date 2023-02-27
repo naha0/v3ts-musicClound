@@ -2,7 +2,7 @@
  * @Author: naha0 780400335@qq.com
  * @Date: 2023-01-06 16:08:26
  * @LastEditors: naha0 780400335@qq.com
- * @LastEditTime: 2023-02-24 16:52:41
+ * @LastEditTime: 2023-02-27 15:04:35
  * @FilePath: \v3ts1\src\view\detail\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -48,7 +48,22 @@ let newPlaylistDetail = computed(() =>
         <DataTable :columns="column" :tableData="newPlaylistDetail"></DataTable>
       </n-tab-pane>
       <n-tab-pane name="the beatles" tab="评论">
-        <DataComment :commentData="MainStore.playlistComment"></DataComment>
+        <DataComment :commentData="MainStore.playlistComment" :itemHeight="80">
+          <template #default="{data}">
+            <n-card hoverable>
+              <div class="flex">
+                <img class="w-10 h-full rounded" :src="data.user.avatarUrl" />
+                <div class="flex flex-col ml-4">
+                  <div >
+                  <span class="text-blue mr-2">{{ data.user.nickname }}:</span>
+                  <span>{{ data.content }}</span>
+                  </div>
+                  <span class="text-gray-400">{{ data.timeStr }}</span>
+                </div>
+              </div>
+            </n-card>
+          </template>
+        </DataComment>
       </n-tab-pane>
       <n-tab-pane name="jay chou" tab="收藏者">
         七里香

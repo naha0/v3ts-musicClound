@@ -22,6 +22,7 @@ declare module '@vue/runtime-core' {
     NAvatar: typeof import('naive-ui')['NAvatar']
     NavBar: typeof import('./src/components/LayOut/NavBar/NavBar.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
+    NCard: typeof import('naive-ui')['NCard']
     NCarousel: typeof import('naive-ui')['NCarousel']
     NCarouselItem: typeof import('naive-ui')['NCarouselItem']
     NCol: typeof import('naive-ui')['NCol']
